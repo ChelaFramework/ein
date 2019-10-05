@@ -1,0 +1,107 @@
+{
+  "db":{
+    "seller":{
+      "ver":1,
+      "create":"",
+      "asset":"db.mp4"
+    }
+  },
+  "query": {
+    "country":"select _country_rowid,title,isocode,isdcode from _country where isactive=1",
+    "atoken":"select atoken from seller where islogin=1",
+    "login0": [
+      "update seller set islogin=0;",
+      "select seller_rowid from seller where atoken=@atoken:string@ and email=@email:string@"
+    ],
+    "login1": "update seller set islogin=1 where seller_rowid=@sid:int@",
+    "login2": "insert into seller(islogin,atoken,email)values(1,@atoken:string@,@email:string@)",
+    "logout":"update seller set islogin=0 where email=@email:string@ or atoken=@atoken:string@",
+    "cgroup": [
+      "select customergrp_rowid",
+      "from customergrp c left join seller s on s.seller_rowid=c.seller_rowid",
+      "where s.islogin=1 and c._customercat_rowid=@type:int@ limit 1"
+    ],
+    "cnewgroup": [
+      "insert into customergrp(seller_rowid,_customercat_rowid,skey,title,regdate)",
+      "select seller_rowid,@type:int@,'','',datetime('now')from seller where islogin=1 limit 1;",
+      "select last_insert_rowid()"
+    ],
+    "cNew": [
+      "insert into customer(customergrp_rowid,cid,username,memo,regdate)values(",
+      "@gid:int@,@cid:string@,@name:string@,@memo:string@,datetime('now'));",
+      "select last_insert_rowid()"
+    ],
+    "cNewPhone":[
+      "insert into customerphone(customer_rowid,_country_rowid,phone)values(",
+      "@cid:int@,@country:int@,@phone:string@)"
+    ],
+    "cNewEmail":[
+      "insert into customeremail(customer_rowid,email)values(",
+      "@cid:int@,@email:string@)"
+    ],
+    "cEdit": [
+      "update customer set username=@name:string@,memo=@memo:string@ where cid=@cid:string@;",
+      "update customerphone set _country_rowid=@country:int@,phone=@phone:string@",
+      "where customer_rowid in(select customer_rowid from customer where cid=@cid:string@);",
+      "update customeremail set email=@email:string@",
+      "where customer_rowid in(select customer_rowid from customer where cid=@cid:string@)"
+    ],
+    "cList": [
+      "select t.title,c.username,c.cid",
+      "from customer c",
+      "left join customergrp g on g.customergrp_rowid=c.customergrp_rowid",
+      "left join _customercat t on t._customercat_rowid=g._customercat_rowid",
+      "left join seller s on s.seller_rowid=g.seller_rowid",
+      "where s.islogin=1 and g._customercat_rowid in(@type@) @search@",
+      "order by c.username"
+    ],
+    "cView": [
+      "select t.title,c.username,c.memo,",
+      "p.phone,e.email,",
+      "ct._country_rowid,ct.title,ct.isocode,ct.isdcode",
+      "from customer c",
+      "left join customergrp g on g.customergrp_rowid=c.customergrp_rowid",
+      "left join _customercat t on t._customercat_rowid=g._customercat_rowid",
+      "left join customerphone p on p.customer_rowid=c.customer_rowid",
+      "left join customeremail e on e.customer_rowid=c.customer_rowid",
+      "left join _country ct on ct._country_rowid=p._country_rowid",
+      "where c.cid=@cid:string@"
+    ],
+    "cDel": [
+      "delete from customerphone where customer_rowid in(select customer_rowid from customer where cid=@cid:string@);",
+      "delete from customeremail where customer_rowid in(select customer_rowid from customer where cid=@cid:string@);",
+      "delete from customer where cid=@cid:string@"
+    ],
+    "cAddrId": [
+      "select customeraddr_rowid from customeraddr",
+      "where customer_rowid in(select customer_rowid from customer where cid=@cid:string@)",
+      "and _addrcat_rowid=@type:int@ and _country_rowid=@country:int@"
+    ],
+    "cAddrEdit": [
+      "update customeraddr set username=@name:string@,phone=@phone:string@,",
+      "zipcode=@zip:string@,addr=@addr:string@",
+      "where customeraddr_rowid=@id:int@"
+    ],
+    "cAddrNew": [
+      "insert into customeraddr(",
+      "customer_rowid,_addrcat_rowid,_country_rowid,username,phone,zipcode,addr)",
+      "select customer_rowid,@type:int@,@country:int@,@name:string@,",
+      "@phone:string@,@zip:string@,@addr:string@",
+      "from customer",
+      "where cid=@cid:string@"
+    ],
+    "cAddr": [
+      "select username,phone,zipcode,addr from customeraddr",
+      "where customer_rowid in(select customer_rowid from customer where cid=@cid:string@)",
+      "and _addrcat_rowid=@type:int@ and _country_rowid=@country:int@"
+    ]
+  },
+  "drawable":{
+    "border":{
+      "strokeWidth":"1dp",
+      "strokeColor":"#b5b5b5",
+      "solid":"#ffffff",
+      "shape":"line"
+    }
+  }
+}

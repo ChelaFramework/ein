@@ -1,4 +1,4 @@
 rootProject.name = 'a0'
 include ':ein'
 include ':app0'
-
+include ':eintest'
