@@ -3,10 +3,11 @@ package base
 import android.webkit.JavascriptInterface
 import ein.android.app.eApp
 import ein.android.view.viewmodel.prop.JSInterface
-import ein.core.channel.eChannel
 import ein.core.core.*
-import ein.core.log.log
 import ein.core.sql.eDB
+import ein.core.value.eJsonObject
+import ein.core.value.eString
+import ein.core.value.eValue
 
 object JSobj:JSInterface {
     override val name = "SELLER"
@@ -23,7 +24,7 @@ object JSobj:JSInterface {
     fun country():String{
         var r = "[]"
         eDB["seller"]?.query("country"){rs, _->
-            rs?.let{r = ePrimitive.rs2Json(it)}
+            rs?.let{r = eValue.rs2Json(it)}
         }
         return r
     }
@@ -45,7 +46,7 @@ object JSobj:JSInterface {
     }
     @JavascriptInterface
     fun cNew(v:String){
-        val json = ePrimitive.json(v) as eJsonObject
+        val json = eValue.json(v) as eJsonObject
         if(json["type"]?.v != "General") return
         eDB["seller"]?.let {db->
             db.begin()
@@ -76,7 +77,7 @@ object JSobj:JSInterface {
     }
     @JavascriptInterface
     fun cEdit(v:String){
-        val json = ePrimitive.json(v) as eJsonObject
+        val json = eValue.json(v) as eJsonObject
         eDB["seller"]?.query("cEdit",
             "cid" to "${json["cid"]?.v}",
             "country" to "${json["country"]?.v}".toInt(),
@@ -103,7 +104,7 @@ object JSobj:JSInterface {
                 else->""
             }
         ){rs, m->
-            rs?.let{r = ePrimitive.rs2Json(it)}
+            rs?.let{r = eValue.rs2Json(it)}
         }
         return r
     }
@@ -137,7 +138,7 @@ object JSobj:JSInterface {
     }
     @JavascriptInterface
     fun cAddrEdit(cid:String, country:Int, data:String){
-        val json = ePrimitive.json(data) as eJsonObject
+        val json = eValue.json(data) as eJsonObject
         eDB["seller"]?.let{
             it.begin()
             fun f(type:Int, v:eJsonObject){

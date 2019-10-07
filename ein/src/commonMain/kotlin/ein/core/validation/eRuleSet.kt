@@ -1,6 +1,6 @@
 package ein.core.validation
 
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 import ein.core.core.elazy
 import ein.core.regex.eReg
 import ein.core.resource.eLoader

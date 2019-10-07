@@ -1,7 +1,7 @@
 package ein.android.view.viewmodel
 
 import android.view.View
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 import ein.core.view.viewmodel.eItem
 import ein.core.view.viewmodel.eProcessor
 import ein.core.view.viewmodel.eTemplate

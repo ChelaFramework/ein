@@ -1,24 +1,27 @@
-package ein.core.core
+package ein.core.value
 
+import ein.core.core.elazy
+import ein.core.core.parseJSON
 import ein.core.view.viewmodel.eViewModel
 
-interface ePrimitive {
+interface eValue {
     companion object {
-        val EMPTY by elazy(true) {ePrimitive("")}
+        val EMPTY by elazy(true) {eValue("")}
         private val srReg = """^\s*(?:\@\{([^}]+)\})|(?:\$\{([^}]*)\})\s*$""".toRegex()
         private val stores = mutableMapOf<String, Any>()
 
         fun json(v:String) = parseJSON(v)
-        operator fun invoke(v:ePrimitive) = v
+        operator fun invoke(v:eValue) = v
         operator fun invoke(v:Int) = eInt(v)
         operator fun invoke(v:Long) = eLong(v)
+        operator fun invoke(v:Float) = eFloat(v)
         operator fun invoke(v:Double) = eDouble(v)
         operator fun invoke(v:Boolean) = eBoolean(v)
         operator fun invoke(v:String) = srReg.find(v)?.groupValues?.run{
             if(this[1].isNotBlank()) eStore(this[1]) else eRecord(this[2])
         } ?: eString(v)
-        operator fun invoke(v:Map<*, *>):eJsonObject = eJsonObject().apply{
-            v.forEach{(k, v)->this["$k"] = convert(v)}
+        operator fun invoke(v:Map<String, *>):eJsonObject = eJsonObject().apply{
+            v.forEach{(k, v)->this[k] = convert(v)}
         }
         operator fun invoke(v:List<Any?>):eJsonArray = eJsonArray().apply{this += v.map{convert(it)}}
         operator fun invoke(v:Set<Any?>):eJsonArray = eJsonArray().apply{this += v.map{convert(it)}}
@@ -48,8 +51,8 @@ interface ePrimitive {
             when(val target = get("@{${k.dropLast(1)}}")){
                 is MutableMap<*, *>->(target as? MutableMap<String, T>)?.put(key, v)
                 is MutableList<*>->(target as? MutableList<T>)?.add(key.toInt(), v)
-                is eJsonObject->target[key] = ePrimitive(v)
-                is eJsonArray->target[key.toInt()] = ePrimitive(v)
+                is eJsonObject->target[key] = eValue(v)
+                is eJsonArray->target[key.toInt()] = eValue(v)
                 else->throw Throwable("invalid key:$k")
             }
         }
@@ -59,7 +62,7 @@ interface ePrimitive {
                 is eString->k.v
                 is eStore->k.stringify()
                 is eRecord->k.stringify()
-                is ePrimitive->return k.v
+                is eValue->return k.v
                 else->return k
             }
             var i = 100
@@ -87,7 +90,7 @@ interface ePrimitive {
                             is eString->it.v
                             is eStore->it.stringify()
                             is eRecord->it.stringify()
-                            is ePrimitive->return it.v
+                            is eValue->return it.v
                             else->return it
                         }
                     }
@@ -98,49 +101,9 @@ interface ePrimitive {
 
     }
     val v:Any
-    fun stringify():String
+    fun stringify() = "$v"
 }
-inline class eUpdate(override val v:Any):ePrimitive{
-    override fun stringify() = if(v is String) "\"${v.replace("\"", "\\\"")}\"" else "$v"
-}
-class eOnce(override val v:Any):ePrimitive{
-    var isRun = false
-    override fun stringify() = if(v is String) "\"${v.replace("\"", "\\\"")}\"" else "$v"
-}
-inline class eString(override val v:String):ePrimitive{
-    override fun stringify() = "\"${v.replace("\"", "\\\"")}\""
-}
-inline class eInt(override val v:Int):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eLong(override val v:Long):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eDouble(override val v:Double):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eFloat(override val v:Float):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eBoolean(override val v:Boolean):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eAny(override val v:Any):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eBytes(override val v:ByteArray):ePrimitive{
-    override fun stringify() = "$v"
-}
-inline class eNull(override val v:Boolean = true):ePrimitive{
-    override fun stringify() = "null"
-}
-class eT<T:Any>(val value:T):ePrimitive{
-    override val v = value
-    override fun stringify() = "$v"
-}
-fun <T, R> Map<T,R>.stringify() = ePrimitive(this).stringify()
-fun <T> List<T>.stringify() = ePrimitive(this).stringify()
-fun <T> Set<T>.stringify() = ePrimitive(this).stringify()
-infix fun <A, B, C> Pair<A, B>.t3(that:C) = Triple(this.first, this.second, that)
-infix fun <A, B, C> Pair<A, B>.t2(that:C) = Triple(this.first, that, this.second)
-infix fun <A, B, C> Pair<A, B>.t1(that:C) = Triple(that, this.first, this.second)
+
+fun <T, R> Map<T,R>.stringify() = eValue(this).stringify()
+fun <T> List<T>.stringify() = eValue(this).stringify()
+fun <T> Set<T>.stringify() = eValue(this).stringify()

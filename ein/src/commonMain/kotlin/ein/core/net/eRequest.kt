@@ -1,7 +1,7 @@
 package ein.core.net
 
 import ein.core.core.eEncodeUrl
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 
 class eRequest(internal var url:String, me:String = "GET"){
     internal class File(val filename:String, val mine:String, val file:ByteArray)

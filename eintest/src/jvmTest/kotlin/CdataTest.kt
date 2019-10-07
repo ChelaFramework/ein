@@ -1,7 +1,7 @@
 import ein.core.cdata.eCdata
-import ein.core.core.eJsonObject
-import ein.core.core.ePrimitive
-import ein.core.core.eString
+import ein.core.value.eJsonObject
+import ein.core.value.eValue
+import ein.core.value.eString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -9,7 +9,7 @@ class CdataTest {
     @Test
     fun step1() {
         val a = mapOf<String, String>()
-        eCdata.load(ePrimitive.json("""{
+        eCdata.load(eValue.json("""{
                 "cdata":{
                     "@ln":"ko",
                     "@a":"b",
@@ -41,7 +41,7 @@ class CdataTest {
     @Test
     fun step2() {
         eCdata.requestData {
-            eCdata.load(ePrimitive.json("""{
+            eCdata.load(eValue.json("""{
                 "cdata":{
                     "test@ln":{
                         "en@a":{

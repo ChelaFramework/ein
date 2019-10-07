@@ -1,9 +1,8 @@
 package ein.core.regex
 
-import ein.core.core.ePrimitive
-import ein.core.core.eRecord
-import ein.core.core.eStore
-import ein.core.log.log
+import ein.core.value.eValue
+import ein.core.value.eRecord
+import ein.core.value.eStore
 
 object eRegValue: eReg("""^\s*""" +
         //1,2-string
@@ -23,11 +22,11 @@ object eRegValue: eReg("""^\s*""" +
     var height = 1.0
     operator fun invoke(v:String) = re.find(v)?.let{
         val g = it.groups
-        g[1]?.let{ePrimitive(it.value)} ?:
-        g[2]?.let{ePrimitive(it.value)} ?:
-        g[3]?.let{ePrimitive(group3(it))} ?:
-        g[4]?.let{ePrimitive(group4(it))} ?:
-        g[5]?.let{ePrimitive(it.value.toBoolean())} ?:
+        g[1]?.let{eValue(it.value)} ?:
+        g[2]?.let{eValue(it.value)} ?:
+        g[3]?.let{eValue(group3(it))} ?:
+        g[4]?.let{eValue(group4(it))} ?:
+        g[5]?.let{eValue(it.value.toBoolean())} ?:
         g[6]?.let{eStore(it.value)} ?:
         g[7]?.let{eRecord(it.value)}
     }

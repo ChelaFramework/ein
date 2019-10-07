@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.webkit.JsResult
 import android.widget.TextView
-import ein.android.app.eDrawable
 import ein.android.view.viewmodel.prop.ChromeAlert
 import ein.android.view.viewmodel.propertyAndroid
-import ein.core.core.eJsonObject
-import ein.core.core.ePrimitive
 import ein.core.looper.getLooper
 
 @SuppressLint("StaticFieldLeak")

@@ -3,8 +3,8 @@ package ein.android.app
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import ein.core.core.eJsonArray
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonArray
+import ein.core.value.eJsonObject
 import ein.core.log.log
 import ein.core.regex.eReg
 import ein.core.regex.eRegValue

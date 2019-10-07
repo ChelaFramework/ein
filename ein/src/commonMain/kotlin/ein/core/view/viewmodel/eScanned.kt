@@ -1,6 +1,6 @@
 package ein.core.view.viewmodel
 
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 
 class eScanned<T> internal constructor(
     private val processor:eProcessor<T>,

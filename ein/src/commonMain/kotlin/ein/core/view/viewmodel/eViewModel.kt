@@ -1,7 +1,6 @@
 package ein.core.view.viewmodel
 
-import ein.core.core.ePrimitive
-import ein.core.core.eStore
+import ein.core.value.eValue
 import ein.core.looper.eLooperItem
 import kotlin.reflect.KProperty
 
@@ -29,7 +28,7 @@ abstract class eViewModel(isStored:Boolean = false){
     init{
         if(isStored){
             this::class.simpleName?.let{
-                ePrimitive[it] = map
+                eValue[it] = map
             }
         }
     }

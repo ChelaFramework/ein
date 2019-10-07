@@ -1,7 +1,7 @@
 package ein.core.cdata
 
-import ein.core.core.eJsonObject
-import ein.core.core.eString
+import ein.core.value.eJsonObject
+import ein.core.value.eString
 import ein.core.resource.eLoader
 
 /*

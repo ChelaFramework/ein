@@ -2,7 +2,7 @@ package ein.core.resource
 
 import chela.kotlinJS.view.eStyle
 import ein.core.cdata.eCdata
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 import ein.core.net.eApi
 import ein.core.sql.eDB
 import ein.core.sql.eQuery

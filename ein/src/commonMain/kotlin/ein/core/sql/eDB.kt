@@ -1,6 +1,6 @@
 package ein.core.sql
 
-import ein.core.core.eJsonArray
+import ein.core.value.eJsonArray
 import ein.core.log.log
 
 abstract class eDB(protected val db:String, protected val ver:Int, protected val create:String){

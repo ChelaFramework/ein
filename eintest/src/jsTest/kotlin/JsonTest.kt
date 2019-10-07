@@ -1,5 +1,5 @@
-import ein.core.core.eJsonObject
-import ein.core.core.ePrimitive
+import ein.core.value.eJsonObject
+import ein.core.value.eValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class JsonTest {
     @Test
     fun jsonTest(){
-        val v = ePrimitive.json("""{
+        val v = eValue.json("""{
                 a:3, b:"abc", c:{a:1, b:3}, d:[1,2,3]
             }""")
         assertTrue(v is eJsonObject, "is json")

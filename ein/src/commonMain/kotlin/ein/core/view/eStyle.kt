@@ -1,6 +1,6 @@
 package chela.kotlinJS.view
 
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 import ein.core.resource.eLoader
 
 /*{

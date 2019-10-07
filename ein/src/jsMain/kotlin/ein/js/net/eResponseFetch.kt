@@ -1,6 +1,6 @@
 package ein.js.net
 
-import ein.core.core.ePrimitive
+import ein.core.value.eValue
 import ein.core.core.elazy
 import ein.core.net.eResponse
 import org.khronos.webgl.ArrayBuffer
@@ -18,10 +18,10 @@ class eResponseFetch(private val res:Response?, error:String?):eResponse(error){
         isOpened = true
         res?.text()?.then(block)
     }
-    override fun json(block:(ePrimitive?)->Unit) {
+    override fun json(block:(eValue?)->Unit) {
         if(isOpened) throw  Throwable("is opened")
         isOpened = true
-        res?.text()?.then{block(ePrimitive.json(it))}
+        res?.text()?.then{block(eValue.json(it))}
     }
     override fun bytes(block:(ByteArray?)->Unit) {
         if(isOpened) throw  Throwable("is opened")

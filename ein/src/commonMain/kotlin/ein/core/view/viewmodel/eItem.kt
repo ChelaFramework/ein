@@ -1,6 +1,8 @@
 package ein.core.view.viewmodel
 
-import ein.core.core.*
+import ein.core.value.eJsonObject
+import ein.core.value.eValue
+
 /*
 "@{store.a}" //style:store.a
 "${}" //style:record self
@@ -16,7 +18,7 @@ import ein.core.core.*
  */
 class eItem internal constructor(internal val pos:MutableList<Int>, data:String){
     internal var key = ""
-    private val map = (ePrimitive.json(when(data[0]){
+    private val map = (eValue.json(when(data[0]){
             '@', '$'->"{style:$data}"
             else->"{$data}"
         }) as? eJsonObject) ?: throw Throwable("invalid data:$data")
@@ -24,7 +26,7 @@ class eItem internal constructor(internal val pos:MutableList<Int>, data:String)
     operator fun invoke(record:eViewModel?, i:Int, size:Int):Map<String, Any>?{
         var r:MutableMap<String, Any>? = null
         map.forEach {(k, v)->
-            val value = ePrimitive[v, record, i, size]
+            val value = eValue[v, record, i, size]
             if(k[0] == '@') (r ?: mutableMapOf<String, Any>().apply{r = this})[k.substring(1)] = value
             else if(memo[k] != value){
                 (r ?: mutableMapOf<String, Any>().apply{r = this})[k] = value

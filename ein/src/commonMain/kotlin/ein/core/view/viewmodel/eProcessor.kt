@@ -1,6 +1,6 @@
 package ein.core.view.viewmodel
 
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonObject
 
 abstract class eProcessor<T> {
     internal abstract fun getStack(view:T):List<T>

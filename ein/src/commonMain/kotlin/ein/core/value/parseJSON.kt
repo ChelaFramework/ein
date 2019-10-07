@@ -1,16 +1,18 @@
 package ein.core.core
 
-import ein.core.log.log
 import ein.core.regex.eRegValue
+import ein.core.value.eJsonArray
+import ein.core.value.eJsonObject
+import ein.core.value.eValue
 
 private val atom = """\s*(\{[^\{\}\[\]]*\}|\[[^\{\}\[\]]*\])\s*""".toRegex(RegexOption.MULTILINE)
 private val atomKey = """<@#([0-9]+)!\$>""".toRegex(RegexOption.MULTILINE)
 private val jsonKey = """^\s*(?:"([^":]*)"|([^:,\s"`]+)|`([^`:]*)`)\s*:""".toRegex(RegexOption.MULTILINE)
 private val sstr = """(\s|:|,|^)(\"(?:\\"|[^"])*[\{\}\[\]]+(?:\\"|[^"])*[^\\]?\")""".toRegex()
 private val sKey = """<!#([0-9]+)#\$>""".toRegex()
-internal fun parseJSON(txt:String, limit:Int = 10000):ePrimitive{
-    if(txt.isBlank()) return ePrimitive.EMPTY
-    if(eRegValue.re.find(txt) != null) return eRegValue(txt) ?: ePrimitive.EMPTY
+internal fun parseJSON(txt:String, limit:Int = 10000):eValue {
+    if(txt.isBlank()) return eValue.EMPTY
+    if(eRegValue.re.find(txt) != null) return eRegValue(txt) ?: eValue.EMPTY
     var idx = 0
     val ss = mutableMapOf<String, String>()
     var v = sstr.replace(txt){
@@ -25,8 +27,8 @@ internal fun parseJSON(txt:String, limit:Int = 10000):ePrimitive{
         kv[k] = it.groupValues[1]
         k
     }
-    val map = mutableMapOf<String, ePrimitive>()
-    var last:ePrimitive = ePrimitive.EMPTY
+    val map = mutableMapOf<String, eValue>()
+    var last:eValue = eValue.EMPTY
     kv.forEach {(k, v)->
         var body = sKey.replace(v.substring(1, v.length - 1)){
             ss[it.groupValues[0]] ?: ""
@@ -39,10 +41,10 @@ internal fun parseJSON(txt:String, limit:Int = 10000):ePrimitive{
                 val objK = findKey[1] + findKey[2] + findKey[3]
                 body = jsonKey.replaceFirst(body, "")
                 if(eRegValue.re.find(body) != null){
-                    obj[objK] = eRegValue(body) ?: ePrimitive.EMPTY
+                    obj[objK] = eRegValue(body) ?: eValue.EMPTY
                     body = eRegValue.re.replaceFirst(body, "")
                 }else if(atomKey.find(body) != null){
-                    obj[objK] = map[atomKey.find(body)?.groupValues?.get(0) ?: ""] ?: ePrimitive.EMPTY
+                    obj[objK] = map[atomKey.find(body)?.groupValues?.get(0) ?: ""] ?: eValue.EMPTY
                     body = atomKey.replaceFirst(body, "")
                 }else break
                 if(body.isNotBlank() && body[0] == ',') body = body.substring(1) else break
@@ -53,10 +55,10 @@ internal fun parseJSON(txt:String, limit:Int = 10000):ePrimitive{
             var i = limit
             do{
                 if(eRegValue.re.find(body) != null) {
-                    arr += eRegValue(body) ?: ePrimitive.EMPTY
+                    arr += eRegValue(body) ?: eValue.EMPTY
                     body = eRegValue.re.replaceFirst(body, "")
                 }else if(atomKey.find(body) != null){
-                    arr += map[atomKey.find(body)?.groupValues?.get(0) ?: ""] ?: ePrimitive.EMPTY
+                    arr += map[atomKey.find(body)?.groupValues?.get(0) ?: ""] ?: eValue.EMPTY
                     body = atomKey.replaceFirst(body, "")
                 }else break
                 if(body.isNotBlank() && body[0] == ',') body = body.substring(1) else break

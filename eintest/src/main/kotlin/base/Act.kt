@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import ein.core.core.ePrimitive
+import ein.core.value.eValue
 import ein.core.log.log
 
 class Act:AppCompatActivity(){
@@ -31,7 +31,7 @@ class Act:AppCompatActivity(){
         if(intent?.action == Intent.ACTION_MAIN) App.init(this, bundle)
         else{
             val data = intent?.getStringExtra(DATA)?.let{
-               ePrimitive.json(it)
+               eValue.json(it)
             }
             when(intent?.flags){
                 FCM->{}

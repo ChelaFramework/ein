@@ -1,7 +1,7 @@
 package ein.core.sql
 
-import ein.core.core.eJsonArray
-import ein.core.core.eJsonObject
+import ein.core.value.eJsonArray
+import ein.core.value.eJsonObject
 import ein.core.log.log
 import ein.core.resource.eLoader
 import ein.core.validation.eRuleSet

@@ -1,6 +1,6 @@
 package ein.android.net
 
-import ein.core.core.ePrimitive
+import ein.core.value.eValue
 import ein.core.core.elazy
 import ein.core.net.eResponse
 import okhttp3.Response
@@ -14,10 +14,10 @@ class eResponseOkHttp(private val res:Response?, error:String?):eResponse(error)
         isOpened = true
         block(res?.body()?.use{it.string()} ?: throw Throwable("invalid text"))
     }
-    override fun json(block:(ePrimitive?)->Unit) {
+    override fun json(block:(eValue?)->Unit) {
         if(isOpened) throw  Throwable("is opened")
         isOpened = true
-        block(res?.body()?.use{ePrimitive.json(it.string())} ?: throw Throwable("invalid json"))
+        block(res?.body()?.use{eValue.json(it.string())} ?: throw Throwable("invalid json"))
     }
 
     override fun bytes(block:(ByteArray?)->Unit) {
