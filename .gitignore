@@ -2,7 +2,6 @@
 /eintest/build
 /app0
 /build
-/.gradle
+.gradle
 /.idea
-/gradle
 *.iml
