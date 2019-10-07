@@ -1,14 +1,11 @@
-package ein.core.core
+package ein.core.value
 
 import ein.core.regex.eRegValue
-import ein.core.value.eJsonArray
-import ein.core.value.eJsonObject
-import ein.core.value.eValue
 
 private val atom = """\s*(\{[^\{\}\[\]]*\}|\[[^\{\}\[\]]*\])\s*""".toRegex(RegexOption.MULTILINE)
 private val atomKey = """<@#([0-9]+)!\$>""".toRegex(RegexOption.MULTILINE)
 private val jsonKey = """^\s*(?:"([^":]*)"|([^:,\s"`]+)|`([^`:]*)`)\s*:""".toRegex(RegexOption.MULTILINE)
-private val sstr = """(\s|:|,|^)(\"(?:\\"|[^"])*[\{\}\[\]]+(?:\\"|[^"])*[^\\]?\")""".toRegex()
+private val sstr = """(\s|:|,|^)(\"((?:\\"|[^"])*(?:[\{\}\[\]])(?:\\"|[^"]|[\{\}\[\]])*)\"|`([^`]*)`)""".toRegex()
 private val sKey = """<!#([0-9]+)#\$>""".toRegex()
 internal fun parseJSON(txt:String, limit:Int = 10000):eValue {
     if(txt.isBlank()) return eValue.EMPTY

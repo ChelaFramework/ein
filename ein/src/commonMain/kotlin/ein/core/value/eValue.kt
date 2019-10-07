@@ -1,7 +1,6 @@
 package ein.core.value
 
 import ein.core.core.elazy
-import ein.core.core.parseJSON
 import ein.core.view.viewmodel.eViewModel
 
 interface eValue {
@@ -17,9 +16,10 @@ interface eValue {
         operator fun invoke(v:Float) = eFloat(v)
         operator fun invoke(v:Double) = eDouble(v)
         operator fun invoke(v:Boolean) = eBoolean(v)
-        operator fun invoke(v:String) = srReg.find(v)?.groupValues?.run{
-            if(this[1].isNotBlank()) eStore(this[1]) else eRecord(this[2])
-        } ?: eString(v)
+        operator fun invoke(v:String) = if(v.isNotBlank() && v[0] == '{') json(v)
+            else srReg.find(v)?.groupValues?.run{
+                if(this[1].isNotBlank()) eStore(this[1]) else eRecord(this[2])
+            } ?: eString(v)
         operator fun invoke(v:Map<String, *>):eJsonObject = eJsonObject().apply{
             v.forEach{(k, v)->this[k] = convert(v)}
         }

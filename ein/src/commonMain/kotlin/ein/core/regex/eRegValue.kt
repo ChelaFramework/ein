@@ -1,46 +1,33 @@
 package ein.core.regex
 
-import ein.core.value.eValue
-import ein.core.value.eRecord
-import ein.core.value.eStore
+import ein.core.value.*
 
-object eRegValue: eReg("""^\s*""" +
-        //1,2-string
-        """(?:"((?:[^\\"]+|\\["\\bfnrt]|\\u[0-9a-fA-invoke]{4})*)"|`((?:[^`]+|\\[`\\bfnrt]|\\u[0-9a-fA-invoke]{4})*)`|""" +
-        //3-long
-        """(-?(?:0|[1-9]\d*)(?:dp|sp|%w|%h)?)|""" +
-        //4-double
-        """(-?(?:0|[1-9]\d*)(?:\.\d+)(?:[eE][-+]?\d+)?(?:dp|%w|%h)?)|"""+
-        //5-bool
-        """(true|false)|""" +
-        //6-store, 7-record
-        """(?:\@\{([^}]+)\})|(?:\$\{([^}]*)\}))\s*"""
-){
+val regBool = """(true|false)"""
+val regNull = """(null)"""
+val regStore = """(?:\@\{([^}]+)\})"""
+val regRecord = """(?:\$\{([^}]*)\})"""
+val regDouble = """(-?(?:0|[1-9]\d*)(?:\.\d+)(?:[eE][-+]?\d+)?(?:dp|%w|%h)?)"""
+val regLong = """(-?(?:0|[1-9]\d*)(?:dp|sp|%w|%h)?)"""
+val regString = """\"((?:\\"|[^"])*)\"|`([^`]*)`"""
+                                //1-bool,2-null,   3-store, 4-record,  5-double,  6-long,  7,8-string
+object eRegValue: eReg("""^\s*(?:$regBool|$regNull|$regStore|$regRecord|$regDouble|$regLong|$regString)\s*"""){
     var dp = 1.0
     var sp = 1.0
     var width = 1.0
     var height = 1.0
     operator fun invoke(v:String) = re.find(v)?.let{
         val g = it.groups
-        g[1]?.let{eValue(it.value)} ?:
-        g[2]?.let{eValue(it.value)} ?:
-        g[3]?.let{eValue(group3(it))} ?:
-        g[4]?.let{eValue(group4(it))} ?:
-        g[5]?.let{eValue(it.value.toBoolean())} ?:
-        g[6]?.let{eStore(it.value)} ?:
-        g[7]?.let{eRecord(it.value)}
+        g[1]?.let{eBoolean(it.value.toBoolean())} ?:
+        g[2]?.let{eNull()} ?:
+        g[3]?.let{eStore(it.value)} ?:
+        g[4]?.let{eRecord(it.value)} ?:
+        g[5]?.let{eDouble(dbl(it))} ?:
+        g[6]?.let{eLong(lng(it))} ?:
+        g[7]?.let{eString(it.value.replace("\\\"", "\""))} ?:
+        g[8]?.let{eString(it.value)}
+
     }
-    fun group3(it:MatchGroup):Long{
-        val v = it.value
-        return when {
-            v.endsWith("dp")->(v.substring(0, v.length - 2).toDouble()*dp).toLong()
-            v.endsWith("sp")->(v.substring(0, v.length - 2).toDouble()*sp).toLong()
-            v.endsWith("%w")->(v.substring(0, v.length - 2).toDouble()*width).toLong()
-            v.endsWith("%h")->(v.substring(0, v.length - 2).toDouble()*height).toLong()
-            else->v.toLong()
-        }
-    }
-    fun group4(it:MatchGroup):Double{
+    fun dbl(it:MatchGroup):Double{
         val v = it.value
         return when {
             v.endsWith("dp") -> v.substring(0, v.length - 2).toDouble()*dp
@@ -50,9 +37,19 @@ object eRegValue: eReg("""^\s*""" +
             else -> v.toDouble()
         }
     }
+    fun lng(it:MatchGroup):Long{
+        val v = it.value
+        return when {
+            v.endsWith("dp")->(v.substring(0, v.length - 2).toDouble()*dp).toLong()
+            v.endsWith("sp")->(v.substring(0, v.length - 2).toDouble()*sp).toLong()
+            v.endsWith("%w")->(v.substring(0, v.length - 2).toDouble()*width).toLong()
+            v.endsWith("%h")->(v.substring(0, v.length - 2).toDouble()*height).toLong()
+            else->v.toLong()
+        }
+    }
     fun num(it:String):Number?{
         return re.find(it)?.let{
-            it.groups[3]?.let{group3(it)} ?: it.groups[4]?.let{group4(it)}
+            it.groups[3]?.let{dbl(it)} ?: it.groups[4]?.let{lng(it)}
         } as Number?
     }
 }
