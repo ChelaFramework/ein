@@ -1,12 +1,10 @@
-package base
+package eintest.test
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import ein.core.value.eValue
-import ein.core.log.log
 
 class Act:AppCompatActivity(){
     companion object{
@@ -16,12 +14,10 @@ class Act:AppCompatActivity(){
     }
     private var bundle:Bundle? = null
     override fun onCreate(savedInstanceState: Bundle?){
-        log("${System.currentTimeMillis()}")
         super.onCreate(savedInstanceState)
         bundle = savedInstanceState
         setContentView(R.layout.activity_main)
         onNewIntent(intent)
-        log("${System.currentTimeMillis()}")
     }
     override fun onSaveInstanceState(outState:Bundle?, outPersistentState:PersistableBundle?){
         super.onSaveInstanceState(outState, outPersistentState)
@@ -49,9 +45,5 @@ class Act:AppCompatActivity(){
     override fun onDestroy() {
         super.onDestroy()
     }
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?) =
-        if (keyCode == KeyEvent.KEYCODE_BACK && Router.action("canGoBack") == true){
-            Router.action("goBack")
-            true
-        }else super.onKeyDown(keyCode, event)
+
 }

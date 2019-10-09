@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.get
+import ein.core.log.log
 import ein.core.view.router.eBase
 
 class eViewBase(el:ViewGroup, historyLevel:Int = 1):eBase<eViewHolder, View>(historyLevel){
@@ -28,6 +29,7 @@ class eViewBase(el:ViewGroup, historyLevel:Int = 1):eBase<eViewHolder, View>(his
         holder.inflater = inflater
         if(idx == -1) group.addView(holder.view)
         else group.addView(holder.view, idx)
+        holder.render()
     }
 
     override fun remove(holder:eViewHolder) {

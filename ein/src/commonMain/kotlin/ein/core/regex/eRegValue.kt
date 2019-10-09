@@ -2,9 +2,9 @@ package ein.core.regex
 
 import ein.core.value.*
 
-val regString = """\"((?:\\"|[^"])*)\"|`([^`]*)`"""
-val regStore = """(?:\@\{([^}]+)\})"""
-val regRecord = """(?:\$\{([^}]*)\})"""
+val regString = """"((?:\\"|[^"])*)"|`([^`]*)`"""
+val regStore = "(?:s@([^@]+)@)"
+val regRecord = "(?:r@([^@]+)@)"
 val regDouble = """(-?(?:0|[1-9]\d*)(?:\.\d+)(?:[eE][-+]?\d+)?(?:dp|%w|%h)?)"""
 val regLong = """(-?(?:0|[1-9]\d*)(?:dp|sp|%w|%h)?)"""
 val regBool = "(true|false)"
@@ -14,6 +14,7 @@ object eRegValue: eReg("""^\s*(?:$regString|$regStore|$regRecord|$regDouble|$reg
     var sp = 1.0
     var width = 1.0
     var height = 1.0
+    private val rNum = """^\s*(?:$regDouble|$regLong)\s*$""".toRegex()
     operator fun invoke(v:String) = re.find(v)?.groups?.let{
         it[1]?.run{eString(value.replace("\\\"", "\""))} ?:
         it[2]?.run{eString(value)} ?:
@@ -35,8 +36,8 @@ object eRegValue: eReg("""^\s*(?:$regString|$regStore|$regRecord|$regDouble|$reg
     }
     fun lng(it:MatchGroup) = dbl(it).toLong()
     fun num(it:String):Number?{
-        return re.find(it)?.let{
-            it.groups[3]?.let{dbl(it)} ?: it.groups[4]?.let{lng(it)}
+        return rNum.matchEntire(it)?.let{
+            it.groups[1]?.let{dbl(it)} ?: it.groups[2]?.let{lng(it)}
         } as Number?
     }
 }

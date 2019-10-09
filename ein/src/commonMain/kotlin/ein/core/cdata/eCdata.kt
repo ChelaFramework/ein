@@ -3,6 +3,7 @@ package ein.core.cdata
 import ein.core.value.eJsonObject
 import ein.core.value.eString
 import ein.core.resource.eLoader
+import ein.core.value.eValue
 
 /*
 {
@@ -22,7 +23,7 @@ import ein.core.resource.eLoader
 class eCdata(val cat:String):MutableMap<String, Any?> by mutableMapOf(){
     var default:String? = null
     companion object:eLoader{
-        private val root = eCdata("_ROOT_")
+        val root = eCdata("_ROOT_")
         private val cat = mutableMapOf<String, String>()
         private val cats:String get() = if(cat.isEmpty()) "" else{
             var r = ""
@@ -54,12 +55,8 @@ class eCdata(val cat:String):MutableMap<String, Any?> by mutableMapOf(){
         fun removeData(k:String) = root.remove(k)
         fun setCat(k:String, v:String) = cat.set(k, v)
         fun getCat(k:String) = cat[k]
-        fun clearCache(){
-            cache.clear()
-        }
-        fun clearCache(k:String){
-            cache.remove(k)
-        }
+        fun clearCache() = cache.clear()
+        fun clearCache(k:String) = cache.remove(k)
         override fun load(res:eJsonObject){
             (res["cdata"] as? eJsonObject)?.forEach{(k, v)->
                 when(v){

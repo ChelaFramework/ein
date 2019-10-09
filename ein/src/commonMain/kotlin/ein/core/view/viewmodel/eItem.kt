@@ -1,7 +1,8 @@
 package ein.core.view.viewmodel
 
-import ein.core.value.eJsonObject
-import ein.core.value.eValue
+import ein.core.log.log
+import ein.core.regex.eRegValue
+import ein.core.value.*
 
 /*
 "@{store.a}" //style:store.a
@@ -16,23 +17,34 @@ import ein.core.value.eValue
 //no memo @
 "@a:3" //every update
  */
-class eItem internal constructor(internal val pos:MutableList<Int>, data:String){
+class eItem internal constructor(internal val pos:List<Int>, data:String){
     internal var key = ""
-    private val map = (eValue.json(when(data[0]){
-            '@', '$'->"{style:$data}"
-            else->"{$data}"
-        }) as? eJsonObject) ?: throw Throwable("invalid data:$data")
-    private val memo = mutableMapOf<String, Any>()
-    operator fun invoke(record:eViewModel?, i:Int, size:Int):Map<String, Any>?{
-        var r:MutableMap<String, Any>? = null
+    val map = (eValue.json(eValue.srReg.matchEntire(data)?.let{"{style:$data}"} ?: "{$data}") as? eJsonObject) ?: throw Throwable("invalid data:$data")
+    private fun process(k:String, v:Any, r:MutableMap<String, Any>, memo:MutableMap<String, Any>, record:eViewModel?, i:Int, size:Int){
+        val value = eValue[v, record, i, size].let{if(it !is String) it else eRegValue.num(it) ?: it}
+        if(k[0] == '@') r[k.substring(1)] = value
+        else if(memo[k] != value){
+            memo[k] = value
+            r[k] = value
+        }
+    }
+    operator fun invoke(memo:MutableMap<String, Any>, record:eViewModel?, i:Int, size:Int) = mutableMapOf<String, Any>().run{
         map.forEach {(k, v)->
-            val value = eValue[v, record, i, size]
-            if(k[0] == '@') (r ?: mutableMapOf<String, Any>().apply{r = this})[k.substring(1)] = value
-            else if(memo[k] != value){
-                (r ?: mutableMapOf<String, Any>().apply{r = this})[k] = value
-                memo[k] = value
+            if(k != "style") process(k, v, this, memo, record, i, size)
+            else{
+                val value = when(v){
+                    is eStore, is eRecord->eValue[v, record, i, size]
+                    else->null
+                }
+                (when(value){
+                    is eViewModel->value.map
+                    is eJsonObject->value
+                    else->throw Throwable("invalid style:${v.stringify()}")
+                }).forEach {(k, v)->
+                    process(k, v, this, memo, record, i, size)
+                }
             }
         }
-        return r
+        if(this.isEmpty()) null else this
     }
 }

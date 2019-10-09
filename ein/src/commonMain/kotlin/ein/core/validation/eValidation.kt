@@ -9,7 +9,7 @@ import ein.core.resource.eLoader
     "validation":{
         "@default":"@{cdata.error}", //optinal, default error msg for all validations
         "rating":{ //key
-            "type":"base", //optional, default "base"
+            "type":"eintest.test.base", //optional, default "eintest.test.base"
             "ruleset":"trim|string|a@range[1,5]-or-b@first[a]|c@range[1,4]", //mandatory
             "msg":{ //optional
                 "@default":"@{cdata.error/rating}", //optional
@@ -47,12 +47,12 @@ open class eValidation(val ruleset:eRuleSet, val msg:eJsonObject?, val arg:eJson
         }
         private var defaultMsg = "invalid"
         private val types = mutableMapOf<String, eValiF>(
-            "base" to {r, m, a-> eValidation(r, m, a) }
+            "eintest.test.base" to {r, m, a-> eValidation(r, m, a) }
         )
         private val map = mutableMapOf<String, eValidation>()
         fun setType(k:String, f:eValiF) = types.set(k, f)
         fun defaultMsg(v:String){defaultMsg = v}
-        operator fun set(k:String, v:eJsonObject) = types[v["type"] ?: "base"]?.let {
+        operator fun set(k:String, v:eJsonObject) = types[v["type"] ?: "eintest.test.base"]?.let {
             map[k] = it(
                 eRuleSet(v["ruleset"]?.v?.toString() ?: throw Throwable("no ruleset")),
                 v["msg"] as? eJsonObject,

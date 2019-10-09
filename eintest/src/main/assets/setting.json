@@ -1,4 +1,18 @@
 {
+  "style": {
+    "t1": {
+      "text": "styled from t1",
+      "textColor": "#ffff00",
+      "textSize": "20sp"
+    }
+  },
+  "cdata":{
+    "@ln":"en",
+    "c1@ln":{
+      "en":"hello",
+      "ko":"안녕"
+    }
+  },
   "db":{
     "seller":{
       "ver":1,

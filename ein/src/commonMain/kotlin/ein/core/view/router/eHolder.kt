@@ -4,7 +4,10 @@ import ein.core.channel.eListener
 import ein.core.log.log
 import ein.core.looper.ItemBlock
 import ein.core.looper.getLooper
+import ein.core.value.eJsonObject
 import ein.core.view.viewmodel.eScanned
+import ein.core.view.viewmodel.eTemplate
+import ein.core.view.viewmodel.eViewModel
 
 abstract class eHolder<T>(
     internal val routerKey:String,
@@ -28,8 +31,8 @@ abstract class eHolder<T>(
     private var isAlive = false
     protected val listener = eHolderListener(*channels)
 
-    protected fun render(){
-        scanned?.invoke(view)
+    protected fun render(record:eViewModel? = null, ref:eJsonObject? = null){
+        scanned?.invoke(view, record, ref = ref)
     }
     protected fun pushSet(time:Int, ani: eAni){
         pushTime = time
@@ -71,8 +74,8 @@ abstract class eHolder<T>(
     protected open fun pop(isAni:Boolean, end:()->Unit, popAni:eAni, popTime:Int){
         getLooper().run(end)
     }
-    internal open fun pushed(){}
-    internal open fun poped(){}
+    open fun pushed(){}
+    open fun poped(){}
     internal open fun restored(isCurr:Boolean){}
     internal fun next(limit:Int = LIMIT, block:(eHolder<T>)->Unit){
         if(limit > 0) next?.let{
@@ -86,5 +89,5 @@ abstract class eHolder<T>(
             it.prev(limit - 1, block)
         }
     }
-    abstract fun action(k:String, v:Any?):Any?
+    open fun action(k:String, v:Any?):Any? = null
 }

@@ -13,11 +13,13 @@ class Value {
         assertTrue(eValue(10.0).v == 10.0)
         assertEquals(true, eValue(true).v)
         assertEquals("abc", eValue("abc").v)
-        assertEquals("a", eValue("@{a}").v)
-        assertEquals("a", eValue("\${a}").v)
+        assertEquals("a", eValue("s@a@").v)
+        assertEquals("style.a", eValue("s@style.a@").v)
+        assertEquals("a", eValue("r@a@").v)
+        assertEquals("style.a", eValue("r@style.a@").v)
         assertEquals(3L, (eValue("{a:3, b:5}") as? eJsonObject)?.get("a")?.v)
-        assertTrue(eValue("@{a}") is eStore)
-        assertTrue(eValue("\${a}") is eRecord)
+        assertTrue(eValue("s@a@") is eStore)
+        assertTrue(eValue("r@a@") is eRecord)
         assertEquals("a", eValue(listOf("a")).v[0].v)
         assertEquals("b", eValue(setOf("a", "b")).v[1].v)
         assertEquals(3, eValue(mapOf("a" to 3)).v["a"]?.v)
@@ -66,5 +68,13 @@ class Value {
         }""") as eJsonObject
         assertEquals("""{}-[]-""-""", json2("a").v)
         assertEquals(1L, json2("b").v)
+        val json3 = eValue("""{
+           a:s@title.a@,
+           b:r@title.b@
+        }""") as eJsonObject
+        assertTrue(json3("a") is eStore)
+        assertTrue(json3("b") is eRecord)
+        assertEquals("title.a", json3("a").v)
+        assertEquals("title.b", json3("b").v)
     }
 }

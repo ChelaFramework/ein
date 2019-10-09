@@ -34,7 +34,7 @@ class eRouter<T:eBase<R, U>, R:eHolder<U>, U>(val key:String, val base:T){
         var i = count
         var target:eHolder<U> = curr ?: return
         while(i-- > 0) target.prev?.let {
-            base.prev(isAni)
+            eintest.test.base.prev(isAni)
             target = it
         }
     }
@@ -42,7 +42,7 @@ class eRouter<T:eBase<R, U>, R:eHolder<U>, U>(val key:String, val base:T){
         var i = count
         var target:eHolder<U> = curr ?: return
         while(i-- > 0) target.prev?.let {
-            base.next(isAni)
+            eintest.test.base.next(isAni)
             target = it
         }
     }*/

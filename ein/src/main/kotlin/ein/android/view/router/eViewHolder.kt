@@ -26,8 +26,7 @@ abstract class eViewHolder(
             if(inf == it) return v ?: throw Throwable("no view")
             inf = it
             v = it.inflate(layout, null, isMerge)
-            @Suppress("UNCHECKED_CAST")
-            //scanned = eScanner[key] as? eScanned<View> ?: eScanner.scan(v!!, processorAndroid, propertyAndroid, key)
             v
         } ?: throw Throwable("no inflate")
+    abstract fun render()
 }

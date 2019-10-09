@@ -1,12 +1,16 @@
 package ein.core.value
 
+import ein.core.cdata.eCdata
 import ein.core.core.elazy
+import ein.core.log.log
+import ein.core.regex.regRecord
+import ein.core.regex.regStore
 import ein.core.view.viewmodel.eViewModel
 
 interface eValue {
     companion object {
         val EMPTY by elazy(true) {eValue("")}
-        private val srReg = """^\s*(?:\@\{([^}]+)\})|(?:\$\{([^}]*)\})\s*$""".toRegex()
+        val srReg = """^\s*$regStore|$regRecord\s*$""".toRegex()
         private val stores = mutableMapOf<String, Any>()
 
         fun json(v:String) = parseJSON(v)
@@ -47,56 +51,54 @@ interface eValue {
         operator fun <T:Any>set(k:eStore, v:T) = set(k.v.split('.'), v)
         @Suppress("UNCHECKED_CAST")
         operator fun <T:Any>set(k:List<String>, v:T){
+            if(k.size == 1){
+                stores[k[0]] = v
+                return
+            }
             val key = k.last()
-            when(val target = get("@{${k.dropLast(1)}}")){
-                is MutableMap<*, *>->(target as? MutableMap<String, T>)?.put(key, v)
-                is MutableList<*>->(target as? MutableList<T>)?.add(key.toInt(), v)
+            when(val target = get(eStore(k.dropLast(1).joinToString(".")))){
+                is eViewModel->target[key] = v
                 is eJsonObject->target[key] = eValue(v)
                 is eJsonArray->target[key.toInt()] = eValue(v)
+                is MutableMap<*, *>->(target as? MutableMap<String, T>)?.put(key, v)
+                is MutableList<*>->(target as? MutableList<T>)?.add(key.toInt(), v)
                 else->throw Throwable("invalid key:$k")
             }
         }
         operator fun get(k:Any, record:Any? = null, idx:Int = 0, size:Int = 0):Any{
-            var key = when(k){
-                is String->k
-                is eString->k.v
-                is eStore->k.stringify()
-                is eRecord->k.stringify()
-                is eValue->return k.v
-                else->return k
-            }
-            var i = 100
-            do{
-                key = srReg.find(key)?.groupValues?.let{
-                    val isStore = it[1].isNotBlank()
-                    (if(isStore) it[1] else it[2]).split(".").fold(
-                        if(isStore) stores else record ?: throw Throwable("no record")
-                    ){target, k->
-                        when(k){
-                            ":index"->idx
-                            ":size"->size
-                            "",":record"->record!!
-                            else->when(target){
-                                is Map<*, *>->target[k]
-                                is List<*>->target[k.toInt()]
-                                is eJsonObject->target[k]
-                                is eJsonArray->target[k.toInt()]
-                                is eViewModel->target[k]
-                                else->null
-                            } ?: throw Throwable("invalid key:$k of $key")
-                        }
-                    }.let{
-                        when(it){
-                            is eString->it.v
-                            is eStore->it.stringify()
-                            is eRecord->it.stringify()
-                            is eValue->return it.v
-                            else->return it
-                        }
+            var i = 10
+            var r:Any = k
+            do {
+                val (search, store) = when(r) {
+                    is eStore->r.v to stores
+                    is eRecord->r.v to (record ?: throw Throwable("no record for $k"))
+                    is eString->srReg.find(r.v)?.groupValues?.let{
+                        if(it[1].isNotBlank()) it[1] to stores else it[2] to (record ?: throw Throwable("no record for $k"))
+                    } ?: return r.v
+                    is eValue->return r.v
+                    is String->srReg.find(r)?.groupValues?.let{
+                        if(it[1].isNotBlank()) it[1] to stores else it[2] to (record ?: throw Throwable("no record for $k"))
+                    } ?: return r
+                    else->return r
+                }
+                r = search.split(".").fold(store){acc, v->
+                    when(v){
+                        ":index"->idx
+                        ":size"->size
+                        "", ":record"->record!!
+                        else->when(acc) {
+                            is eViewModel->acc[v]
+                            is eCdata->eCdata[v]
+                            is eJsonObject->acc[v]
+                            is eJsonArray->acc[v.toInt()]
+                            is Map<*, *>->acc[v]
+                            is List<*>->acc[v.toInt()]
+                            else->null
+                        } ?: throw Throwable("invalid key:$v of $r")
                     }
-                } ?: return key
+                }
             }while(i-- > 0)
-            return ""
+            throw Throwable("invalid k:$k")
         }
 
     }
