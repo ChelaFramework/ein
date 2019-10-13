@@ -52,10 +52,10 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation("androidx.core:core-ktx:1.2.0-alpha04")
-                implementation("androidx.activity:activity:1.1.0-alpha03")
+                implementation("androidx.core:core-ktx:1.2.0-beta01")
+                implementation("androidx.activity:activity:1.1.0-beta01")
                 implementation("androidx.appcompat:appcompat:1.1.0")
-                implementation("com.squareup.okhttp3:okhttp:3.14.2")
+                implementation("com.squareup.okhttp3:okhttp:3.12.6")
             }
         }
         all {

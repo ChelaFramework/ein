@@ -15,15 +15,16 @@ class eScanned<T> internal constructor(
     internal fun clone() = eScanned(processor, property, items).apply{
         keyItem += keyItem
     }
+    operator fun get(k:String) = keyItem[k]
     operator fun invoke(view:T? = null, record:eViewModel? = null, i:Int = 0, size:Int = 0, template:eTemplate? = null, ref:eJsonObject? = null){
         val isNew = view != null && view !== this.view
         if(isNew) this.view = view!!
-        items.forEach{
-            it(memos[it] ?: mutableMapOf<String, Any>().apply{memos[it] = this}, record, i, size)?.run{
-                if(isNew || it !in views) views[it] = processor.getItemView(view!!, it.pos)
-                val v = views[it]!!
-                processor.beforeItemRender(v, record, i, size, template, ref)
-                forEach{(k, value)->property[k]?.invoke(v, value)}
+        items.forEach{item->
+            item(memos[item] ?: mutableMapOf<String, Any>().apply{memos[item] = this}, record, i, size)?.let{
+                if(isNew || item !in views) views[item] = processor.getItemView(view!!, item.pos)
+                val v = views[item]!!
+                processor.beforeItemRender(this.view, v, record, i, size, template, ref)
+                it.forEach{(k, value)->property[k]?.invoke(v, value) ?: property(v, k, value)}
             }
         }
     }

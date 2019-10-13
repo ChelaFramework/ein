@@ -41,7 +41,7 @@ object processorAndroid:eProcessor<View>() {
         return target
     }
     override fun template(view:View){/*android template is always xml*/}
-    override fun beforeItemRender(view:View, record:eViewModel?, i:Int, size:Int, template:eTemplate?, ref:eJsonObject?){
+    override fun beforeItemRender(root:View?, view:View, record:eViewModel?, i:Int, size:Int, template:eTemplate?, ref:eJsonObject?){
         /*no action*/
     }
 }
