@@ -12,10 +12,13 @@ abstract class eDomHolder(
     companion object{
         private val div = document.createElement("div") as HTMLElement
     }
-    private var html = ""
+    protected open val html:String? = null
+    protected open val el:HTMLElement? = null
     override val view by elazy(true) {
-        div.innerHTML = html
-        (div.firstElementChild as? HTMLElement) ?: throw Throwable("invalid html:$html")
+        html?.let {
+            div.innerHTML = it
+            (div.firstElementChild as? HTMLElement) ?: throw Throwable("invalid html:$html")
+        } ?: el ?: throw Throwable("no html, el")
     }
     abstract fun render()
 }

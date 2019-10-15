@@ -1,5 +1,6 @@
 package ein.js.view.viewmodel
 
+import ein.core.log.log
 import ein.core.value.eJsonObject
 import ein.core.view.viewmodel.eItem
 import ein.core.view.viewmodel.eProcessor

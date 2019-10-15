@@ -10,19 +10,19 @@ import kotlin.browser.window
 
 fun PropBase() = propertyDom.let{
     it["className"] = fun(view:HTMLElement, v:Any){view.className = "$v"}
-    it["className+"] = fun(view:HTMLElement, v:Any){view.className += " $v"}
+    it["className_"] = fun(view:HTMLElement, v:Any){view.className += " $v"}
     it["html"] = fun(view:HTMLElement, v:Any){view.innerHTML = "$v"}
-    it["html+"] = fun(view:HTMLElement, v:Any){view.innerHTML += "$v"}
-    it["+html"] = fun(view:HTMLElement, v:Any){view.innerHTML = "$v" + view.innerHTML}
-    it["+html"] = fun(view:HTMLElement, v:Any){
+    it["html_"] = fun(view:HTMLElement, v:Any){view.innerHTML += "$v"}
+    it["_html"] = fun(view:HTMLElement, v:Any){view.innerHTML = "$v" + view.innerHTML}
+    it["name"] = fun(view:HTMLElement, v:Any){
         when(view){
             is HTMLFormElement-> view.name = "$v"
             is HTMLInputElement-> view.name = "$v"
         }
     }
-    it["runSubmit"] = fun(view:HTMLElement, _:Any){(view as? HTMLFormElement)?.submit()}
-    it["runFocus"] = fun(view:HTMLElement, _:Any){view.focus()}
-    it["runBlur"] = fun(view:HTMLElement, _:Any){view.blur()}
+    it["runSubmit"] = fun(view:HTMLElement, v:Any){if(v == true)(view as? HTMLFormElement)?.submit()}
+    it["runFocus"] = fun(view:HTMLElement, v:Any){if(v == true)view.focus()}
+    it["runBlur"] = fun(view:HTMLElement, v:Any){if(v == true)view.blur()}
     it["disabled"] = fun(view:HTMLElement, v:Any){
         if(v !is Boolean) return
         when(view) {
@@ -92,6 +92,6 @@ fun PropBase() = propertyDom.let{
         }
     }
     it["rectHeight"] = fun(view:HTMLElement, v:Any){
-        view.style.height = "${window.innerHeight - view.getBoundingClientRect().top}px"
+        if(v == true) view.style.height = "${window.innerHeight - view.getBoundingClientRect().top}px"
     }
 }

@@ -1,10 +1,11 @@
 package ein.core.value
 
+import ein.core.log.log
 import ein.core.regex.eRegValue
 
 private val atom = """\s*(\{[^\{\}\[\]]*\}|\[[^\{\}\[\]]*\])\s*""".toRegex(RegexOption.MULTILINE)
 private val atomKey = """<@#([0-9]+)!\$>""".toRegex(RegexOption.MULTILINE)
-private val jsonKey = """^\s*(?:"([^":]*)"|([^:,\s"`]+)|`([^`:]*)`)\s*:""".toRegex(RegexOption.MULTILINE)
+private val jsonKey = """^\s*(?:([^:,\s"`']+)|'([^']*)'|`([^`]*)`|"([^"]*)")\s*:""".toRegex(RegexOption.MULTILINE)
 private val sstr = """(\s|:|,|^)(\"((?:\\"|[^"])*(?:[\{\}\[\]])(?:\\"|[^"]|[\{\}\[\]])*)\"|`([^`]*)`)""".toRegex()
 private val sKey = """<!#([0-9]+)#\$>""".toRegex()
 internal fun parseJSON(txt:String, limit:Int = 10000):eValue {
@@ -35,7 +36,7 @@ internal fun parseJSON(txt:String, limit:Int = 10000):eValue {
             var i = limit
             do{
                 val findKey = jsonKey.find(body)?.groupValues ?: break
-                val objK = findKey[1] + findKey[2] + findKey[3]
+                val objK = findKey[1] + findKey[2] + findKey[3] + findKey[4]
                 body = jsonKey.replaceFirst(body, "")
                 if(eRegValue.re.find(body) != null){
                     obj[objK] = eRegValue(body) ?: eValue.EMPTY

@@ -10,7 +10,7 @@ import ein.core.view.viewmodel.eViewModel
 interface eValue {
     companion object {
         val EMPTY by elazy(true) {eValue("")}
-        val srReg = """^\s*$regStore|$regRecord\s*$""".toRegex()
+        val srReg = """^\s*(?:$regStore|$regRecord)\s*$""".toRegex()
         private val stores = mutableMapOf<String, Any>()
 
         fun json(v:String) = parseJSON(v)

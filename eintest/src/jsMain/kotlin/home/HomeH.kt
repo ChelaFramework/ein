@@ -1,0 +1,58 @@
+package home
+
+import ein.core.core.elazy
+import ein.core.looper.getLooper
+import ein.core.view.router.eAni
+import ein.core.view.viewmodel.eScanner
+import ein.core.view.viewmodel.eViewModel
+import ein.js.view.router.eDomHolder
+import ein.js.view.viewmodel.eDomVM
+import ein.js.view.viewmodel.processorDom
+import ein.js.view.viewmodel.propertyDom
+import org.w3c.dom.HTMLElement
+import kotlin.browser.document
+
+class HomeH(routerKey:String, holderKey:String, data:Any?):eDomHolder(routerKey, holderKey, data){
+    companion object{
+        val base by elazy(true){
+            document.querySelector("#home")?.apply {
+                removeAttribute("id")
+            } ?: throw Throwable("no #home")
+        }
+    }
+    private val vm = Main().apply{
+        x = ""
+        title = "Main Title"
+        contents.html = "contents Text"
+        contents.color = "#ff0000"
+    }
+    override val el by elazy(true) {
+        base.cloneNode(true) as HTMLElement
+    }
+    override fun render(){
+        render(vm)
+    }
+    override val view get() = super.view.apply {
+        scanned = eScanner.scan(this, processorDom, propertyDom, "")
+    }
+    override fun push(isAni:Boolean, end:()->Unit, pushAni:eAni, pushTime:Int) {
+        getLooper().item {
+            time = pushTime
+            block = {
+                vm.x = "${it.backOut(100.0, 0.0)}px"
+                render()
+            }
+        } run(end)
+    }
+    override fun pushed() {
+
+    }
+}
+class Main:eDomVM(){
+    var x by s
+    var title by s
+    val contents by v(object:eDomVM(){
+        override var html by s
+        override var color by s
+    })
+}
