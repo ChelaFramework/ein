@@ -12,5 +12,5 @@ abstract class eTask{
     var delay = 0
     fun stop(){state = STOP}
     fun error(block:(()->Unit)? = null){state = ERROR(block ?: error)}
-    open fun start(){}
+    open fun startTask(){}
 }

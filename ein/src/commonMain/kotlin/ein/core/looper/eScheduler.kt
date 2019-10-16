@@ -36,7 +36,7 @@ abstract class eScheduler<T:eTask, R:eSerial<T>>(internal val term:Double, var l
 
     protected fun start(task:eTask){
         task.start = now().plus(task.delay)
-        task.start()
+        task.startTask()
     }
     protected open fun loop(c:Double, task:T){}
     protected abstract fun task():T

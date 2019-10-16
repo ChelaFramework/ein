@@ -22,7 +22,7 @@ class eAniTask:eTask() {
     internal var isPaused = false
     internal var pauseStart = 0.0
 
-    override fun start() {
+    override fun startTask() {
         end = start + time
     }
     fun pause(){

@@ -1,6 +1,7 @@
 package ein.core.net
 
 import ein.core.core.*
+import ein.core.log.log
 import ein.core.looper.*
 import ein.core.looper.async.eAsyncSerial
 import ein.core.regex.eReg

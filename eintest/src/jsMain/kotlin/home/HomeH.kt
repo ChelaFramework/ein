@@ -36,13 +36,15 @@ class HomeH(routerKey:String, holderKey:String, data:Any?):eDomHolder(routerKey,
         scanned = eScanner.scan(this, processorDom, propertyDom, "")
     }
     override fun push(isAni:Boolean, end:()->Unit, pushAni:eAni, pushTime:Int) {
-        ani().item {
-            time = pushTime
-            block = {
+        ani().invoke {
+            ani({
+                time = pushTime.toDouble()
+            }){
                 vm.x = "${it.backOut(100.0, 0.0)}px"
                 render()
             }
-        } run(end)
+            once(0, end)
+        }
     }
     override fun pushed() {
 

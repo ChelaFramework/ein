@@ -2,7 +2,7 @@ package ein.js.view.viewmodel.prop
 
 import ein.core.core.eNN
 import ein.core.core.eRunnable
-import ein.core.looper.getLooper
+import ein.core.looper.ani
 import ein.core.value.eRemove
 import ein.js.view.viewmodel.propertyDom
 import org.w3c.dom.*
@@ -72,10 +72,15 @@ fun PropBase() = propertyDom.let{
             if(window.innerHeight + 100 > view.getBoundingClientRect().top) view.setAttribute("src", high)
             else {
                 if(low.isNotBlank()) view.setAttribute("src", low)
-                ani().block {item->
-                    if(window.innerHeight + 50 > view.getBoundingClientRect().top){
-                        view.setAttribute("src", high)
-                        item.stop()
+                ani().invoke {
+                    ani({
+                        delay = 200
+                        isInfinity = true
+                    }){
+                        if(window.innerHeight + 50 > view.getBoundingClientRect().top){
+                            view.setAttribute("src", high)
+                            it.stop()
+                        }
                     }
                 }
             }
@@ -84,10 +89,15 @@ fun PropBase() = propertyDom.let{
     it["topViewPort"] = fun(view:HTMLElement, v:Any){
         if(v !is eRunnable) return
         if(window.innerHeight > view.getBoundingClientRect().top) v()
-        else ani().block {item->
-            if(window.innerHeight > view.getBoundingClientRect().top){
-                v()
-                item.stop()
+        else ani().invoke {
+            ani({
+                delay = 200
+                isInfinity = true
+            }) {
+                if(window.innerHeight > view.getBoundingClientRect().top) {
+                    v()
+                    it.stop()
+                }
             }
         }
     }
