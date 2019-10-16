@@ -1,7 +1,7 @@
 package home
 
 import ein.core.core.elazy
-import ein.core.looper.getLooper
+import ein.core.looper.ani
 import ein.core.view.router.eAni
 import ein.core.view.viewmodel.eScanner
 import ein.core.view.viewmodel.eViewModel
@@ -36,7 +36,7 @@ class HomeH(routerKey:String, holderKey:String, data:Any?):eDomHolder(routerKey,
         scanned = eScanner.scan(this, processorDom, propertyDom, "")
     }
     override fun push(isAni:Boolean, end:()->Unit, pushAni:eAni, pushTime:Int) {
-        getLooper().item {
+        ani().item {
             time = pushTime
             block = {
                 vm.x = "${it.backOut(100.0, 0.0)}px"

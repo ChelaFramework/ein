@@ -2,6 +2,7 @@ package ein.core.net
 
 import ein.core.core.*
 import ein.core.looper.*
+import ein.core.looper.async.eAsyncSerial
 import ein.core.regex.eReg
 import ein.core.resource.eLoader
 import ein.core.validation.eRuleSet
@@ -196,8 +197,8 @@ class eApi private constructor(
         operator fun set(k:String, api:eApi) = apis.set(k, api)
         operator fun minusAssign(k:String){remove(k)}
         fun remove(k:String) = apis.remove(k)
-        private val net by elazy(true){getNetLooper()}
-        private val main by elazy(true){getLooper()}
+        private val net by elazy(true){net(true)}
+        private val main by elazy(true){net(false)}
     }
     operator fun invoke(vararg arg:Pair<String, Any>, block:(isOk:Boolean, eResponse, err:String)->Unit):String?{
         val reqItem = mutableMapOf<String, Any>()
@@ -231,37 +232,33 @@ class eApi private constructor(
                 false
             }
         }) return msg
-
         request.send {res->
-            val end:ItemBlock = {
-                it.stop()
-                block(msg.isBlank(), res, msg)
+            val end:eAsyncSerial.()->Unit = {
+                run{block(msg.isBlank(), res, msg)}
             }
             responseTask?.let {tasks->
-                if(tasks.isEmpty()) main.block(end)
-                else{
-                    var item:eLooperSequence? = null
-                    net.block(tasks.map {task->
-                        {item:eLooperItem->
-                            if(msg.isNotBlank()) item.stop()
+                if(tasks.isEmpty()) main(end)
+                else net{
+                    tasks.forEach {task->
+                        wait {
+                            if(msg.isNotBlank()) go()
                             else {
                                 val (k, a) = eReg.param.parse(task)
                                 responseTasks[k]?.let {
                                     it(res, a) {isOk->
                                         if(!isOk) msg = "error response task:$k, $a for $key"
-                                        item.stop()
+                                        go()
                                     }
                                 } ?: run {
                                     msg = "invalid response task:$k, $a for $key"
-                                    item.stop()
+                                    go()
                                 }
                             }
                         }
-                    }) run {
-                        main.block(end)
                     }
+                    run{main(end)}
                 }
-            } ?: main.block(end)
+            } ?: main(end)
         }
         return null
     }

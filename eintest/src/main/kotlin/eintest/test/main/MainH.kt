@@ -6,7 +6,7 @@ import ein.android.view.viewmodel.eAndroidVM
 import ein.android.view.viewmodel.processorAndroid
 import ein.android.view.viewmodel.propertyAndroid
 import ein.core.log.log
-import ein.core.looper.getLooper
+import ein.core.looper.ani
 import ein.core.view.router.eAni
 import ein.core.view.viewmodel.eScanner
 import eintest.test.R
@@ -26,13 +26,15 @@ class MainH(routerKey:String, holderKey:String, data:Any?):eViewHolder(routerKey
         scanned = eScanner.scan(this, processorAndroid, propertyAndroid, "main")
     }
     override fun push(isAni:Boolean, end:()->Unit, pushAni:eAni, pushTime:Int) {
-        getLooper().item {
-            time = pushTime
-            block = {
+        ani().invoke {
+            ani({
+                time = pushTime.toDouble()
+            }){
                 vm.x = it.backOut(eWindow.width.toDouble(), 0.0).toFloat()
                 render()
             }
-        } run(end)
+            once(0, end)
+        }
     }
     override fun pushed() {
 

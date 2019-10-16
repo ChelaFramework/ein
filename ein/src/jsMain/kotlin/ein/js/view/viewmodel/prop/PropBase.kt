@@ -72,7 +72,7 @@ fun PropBase() = propertyDom.let{
             if(window.innerHeight + 100 > view.getBoundingClientRect().top) view.setAttribute("src", high)
             else {
                 if(low.isNotBlank()) view.setAttribute("src", low)
-                getLooper().block {item->
+                ani().block {item->
                     if(window.innerHeight + 50 > view.getBoundingClientRect().top){
                         view.setAttribute("src", high)
                         item.stop()
@@ -84,7 +84,7 @@ fun PropBase() = propertyDom.let{
     it["topViewPort"] = fun(view:HTMLElement, v:Any){
         if(v !is eRunnable) return
         if(window.innerHeight > view.getBoundingClientRect().top) v()
-        else getLooper().block {item->
+        else ani().block {item->
             if(window.innerHeight > view.getBoundingClientRect().top){
                 v()
                 item.stop()

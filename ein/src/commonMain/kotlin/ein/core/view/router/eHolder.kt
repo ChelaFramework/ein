@@ -1,12 +1,8 @@
 package ein.core.view.router
 
-import ein.core.channel.eListener
-import ein.core.log.log
-import ein.core.looper.ItemBlock
-import ein.core.looper.getLooper
+import ein.core.looper.ani
 import ein.core.value.eJsonObject
 import ein.core.view.viewmodel.eScanned
-import ein.core.view.viewmodel.eTemplate
 import ein.core.view.viewmodel.eViewModel
 
 abstract class eHolder<T>(
@@ -67,12 +63,12 @@ abstract class eHolder<T>(
         pop(isAni, end, popAni, popTime)
     }
     protected open fun push(isAni:Boolean, end:()->Unit, pushAni:eAni, pushTime:Int){
-        getLooper().run(end)
+        ani().invoke{once(0, end)}
     }
     protected open fun toBack(isAni:Boolean, isCurr:Boolean, isDisplay:Boolean, pushAni:eAni, pushTime:Int){}
     protected open fun toFront(isAni:Boolean, isCurr:Boolean, isDisplay:Boolean, popAni:eAni, popTime:Int){}
     protected open fun pop(isAni:Boolean, end:()->Unit, popAni:eAni, popTime:Int){
-        getLooper().run(end)
+        ani().invoke{once(0, end)}
     }
     open fun pushed(){}
     open fun poped(){}

@@ -1,5 +1,7 @@
 package ein.core.looper
 
+import ein.core.log.log
+
 abstract class eSerial<T:eTask>{
     private var last:T? = null
     protected fun last(vararg tasks:T) = tasks.forEach {

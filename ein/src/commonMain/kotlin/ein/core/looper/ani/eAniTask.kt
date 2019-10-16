@@ -1,5 +1,8 @@
-package ein.core.looper
+package ein.core.looper.ani
 
+import ein.core.log.log
+import ein.core.looper.eTask
+import ein.core.looper.now
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -7,37 +10,34 @@ import kotlin.math.sqrt
 private const val PI = kotlin.math.PI
 private const val HPI = PI / 2
 
-class eLooperItem{
+class eAniTask:eTask() {
+    var time = 0.0
+    var turn = 0
+    var loop = 1
+    var isInfinity = false
     var rate = 0.0
-    var current = 0.0
-    internal var start = 0.0
-    internal var delay = 0.0
-    internal var end = 0.0
-    internal var term = 0.0
-    internal var isTurn = false
-    internal var loop = 1
-    internal var isPaused = false
-    internal var isInfinity = false
 
-    internal var block:ItemBlock = eLooperItemDSL.empty
-    internal var ended:ItemBlock = eLooperItemDSL.empty
-    internal var next: eLooperItem? = null
-    internal var isStop = false
-    private var pauseStart = 0.0
-    fun stop(){isStop = true}
-    fun pause() {
+    internal var current = 0.0
+    internal var end = 0.0
+    internal var isPaused = false
+    internal var pauseStart = 0.0
+
+    override fun start() {
+        end = start + time
+    }
+    fun pause(){
         if(isPaused) return
         isPaused = true
         pauseStart = now()
     }
-    fun resume() {
+    fun resume(){
         if(!isPaused) return
         isPaused = false
-        pauseStart = now() - pauseStart
-        start += pauseStart
-        end += pauseStart
-        pauseStart = 0.0
+        val gap = now() - pauseStart
+        start += gap
+        end += gap
     }
+
     fun linear(from: Double, to: Double): Double {
         return from + rate * (to - from)
     }

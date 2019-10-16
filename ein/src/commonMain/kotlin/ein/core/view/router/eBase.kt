@@ -1,8 +1,5 @@
 package ein.core.view.router
 
-import ein.core.looper.eLooperItem
-
-
 @Suppress("UNCHECKED_CAST")
 abstract class eBase<T:eHolder<R>, R>(protected val historyLevel:Int){
     protected var curr:T? = null
