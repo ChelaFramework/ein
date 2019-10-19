@@ -2,6 +2,7 @@ package ein.core.view.viewmodel
 
 import ein.core.log.log
 import ein.core.value.eJsonObject
+import ein.core.view.viewmodel.template.eTemplate
 
 class eScanned<T> internal constructor(
     private val processor:eProcessor<T>,
@@ -16,7 +17,7 @@ class eScanned<T> internal constructor(
         keyItem += keyItem
     }
     operator fun get(k:String) = keyItem[k]
-    operator fun invoke(view:T? = null, record:eViewModel? = null, i:Int = 0, size:Int = 0, template:eTemplate? = null, ref:eJsonObject? = null){
+    operator fun invoke(view:T? = null, record:eViewModel? = null, i:Int = 0, size:Int = 0, template:eTemplate<T>? = null, ref:eJsonObject? = null){
         val isNew = view != null && view !== this.view
         if(isNew) this.view = view!!
         items.forEach{item->

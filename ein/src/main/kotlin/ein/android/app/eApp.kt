@@ -40,7 +40,7 @@ object eApp{
     var isDebug = false
     private var isInited = false
     operator fun invoke(a:Application, isDebug:Boolean = false){
-        if(isInited) return
+        //if(isInited) return
         isInited = true
         this.isDebug = isDebug
         app = a

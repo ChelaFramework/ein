@@ -7,6 +7,7 @@ import ein.core.net.eApi
 import ein.core.sql.eQuery
 import ein.core.validation.eRuleSet
 import ein.core.validation.eValidation
+import ein.core.value.eStore
 import ein.core.value.eValue
 
 interface eLoader{
@@ -17,7 +18,7 @@ interface eLoader{
         fun load(res:eJsonObject) {
             if(!isInited){
                 isInited = true
-                factories += listOf(eRuleSet, eValidation, eApi, eQuery, eStyle, eCdata)
+                factories += listOf(eRuleSet, eValidation, eApi, eQuery, eStyle, eCdata, eStore)
                 eValue["style"] = eStyle.styles
                 eValue["cdata"] = eCdata.root
             }

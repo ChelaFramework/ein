@@ -6,10 +6,34 @@ import ein.core.log.log
 import ein.core.value.eJsonObject
 import ein.core.view.viewmodel.eItem
 import ein.core.view.viewmodel.eProcessor
-import ein.core.view.viewmodel.eTemplate
 import ein.core.view.viewmodel.eViewModel
+import ein.core.view.viewmodel.template.eTemplate
 
 object processorAndroid:eProcessor<View>() {
+    override fun tmplFirseChild(target:View):View {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun tmplClone(v:View, item:View):View {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun tmplNext(v:View?):View? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun tmplRemove(v:View) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun tmplJson(item:View):eJsonObject {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun tmplRender(target:View, templates:List<eTemplate<View>>, data:Array<eViewModel>?, ref:eJsonObject?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getStack(view:View) = mutableListOf<View>().apply{
         val stack = mutableListOf(view)
         var limit = 200
@@ -41,7 +65,7 @@ object processorAndroid:eProcessor<View>() {
         return target
     }
     override fun template(view:View){/*android template is always xml*/}
-    override fun beforeItemRender(root:View?, view:View, record:eViewModel?, i:Int, size:Int, template:eTemplate?, ref:eJsonObject?){
+    override fun beforeItemRender(root:View?, view:View, record:eViewModel?, i:Int, size:Int, template:eTemplate<View>?, ref:eJsonObject?){
         /*no action*/
     }
 }

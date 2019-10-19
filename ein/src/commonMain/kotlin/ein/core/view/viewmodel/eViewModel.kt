@@ -1,6 +1,7 @@
 package ein.core.view.viewmodel
 
 import ein.core.value.eValue
+import ein.core.value.stringify
 import kotlin.reflect.KProperty
 
 /*
@@ -42,5 +43,6 @@ abstract class eViewModel(isStored:Boolean = false){
     open fun start(){}
     open fun end(){}
     open fun paused(){}
+    fun stringify() = map.stringify()
 }
 

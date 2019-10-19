@@ -84,6 +84,7 @@ class eSqliteDB(db:String, ver:Int, create:String):eDB(db, ver, create) {
         if(!isBegin && arg.size > 1) sqlite.writer.beginTransaction()
         arg.forEach{(query, a)->
             val q = query.substring(1)
+            //log("$q, ${a.joinToString(",")}")
             try {
                 when(query[0]){
                     'r' -> {

@@ -30,11 +30,10 @@ abstract class eScheduler<T:eTask, R:eSerial<T>>(internal val term:Double, var l
             error = EMPTYBLOCK
             init?.invoke(this)
             blockMap[this] = block
-            start(this)
+            setStart(this)
         } ?: throw Throwable("invalid task")
     }
-
-    protected fun start(task:eTask){
+    protected fun setStart(task:eTask){
         task.start = now().plus(task.delay)
         task.startTask()
     }
@@ -53,7 +52,7 @@ abstract class eScheduler<T:eTask, R:eSerial<T>>(internal val term:Double, var l
             when(task.state){
                 STOP->{
                     task.next?.let {
-                        start(it)
+                        setStart(it)
                         @Suppress("UNCHECKED_CAST")
                         add += it as T
                     }

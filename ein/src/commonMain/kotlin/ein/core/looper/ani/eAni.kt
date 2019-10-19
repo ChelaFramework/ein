@@ -1,7 +1,6 @@
 package ein.core.looper.ani
 
 import ein.core.core.eLock
-import ein.core.log.log
 import ein.core.looper.eLooper
 import ein.core.looper.eScheduler
 
@@ -17,7 +16,7 @@ class eAni(term:Double, looper:eLooper, lock:eLock = eLock.EMPTY):eScheduler<eAn
                 task.stop()
                 1.0
             }else{
-                start(task)
+                setStart(task)
                 task.end = task.start + task.time
                 0.0
             }
