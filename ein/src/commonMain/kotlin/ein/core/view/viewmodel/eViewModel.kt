@@ -2,6 +2,7 @@ package ein.core.view.viewmodel
 
 import ein.core.value.eValue
 import ein.core.value.stringify
+import ein.core.view.viewmodel.template.eTemplateData
 import kotlin.reflect.KProperty
 
 /*
@@ -24,9 +25,8 @@ abstract class eViewModel(isStored:Boolean = false){
     val map = mutableMapOf<String, Any>()
     operator fun get(k:String) = map[k]
     operator fun set(k:String, v:Any) = map.put(k, v)
-    protected fun <T:Any> v(v:T, k:String? = null) = VDele(v, map).apply{
-        k?.let{map[it] = v}
-    }
+    protected fun <T:Any> kv(k:String, v:T) = VDele(v, map).apply{map[k] = v}
+    protected fun <T:Any> v(v:T) = VDele(v, map)
     protected val s get() = VDele("", map)
     protected val i get() = VDele(0, map)
     protected val l get() = VDele(0L, map)
@@ -40,9 +40,9 @@ abstract class eViewModel(isStored:Boolean = false){
             }
         }
     }
-    open fun start(){}
-    open fun end(){}
-    open fun paused(){}
     fun stringify() = map.stringify()
+
+    open var template = eTemplateData.EMPTY
+    protected fun template(block:eTemplateData.()->Unit) = kv("template", eTemplateData().apply(block))
 }
 

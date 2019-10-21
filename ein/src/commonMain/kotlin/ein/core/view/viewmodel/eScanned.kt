@@ -2,6 +2,7 @@ package ein.core.view.viewmodel
 
 import ein.core.log.log
 import ein.core.value.eJsonObject
+import ein.core.value.stringify
 import ein.core.view.viewmodel.template.eTemplate
 
 class eScanned<T> internal constructor(

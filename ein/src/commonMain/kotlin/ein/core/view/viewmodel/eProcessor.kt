@@ -13,6 +13,6 @@ abstract class eProcessor<T> {
     abstract fun tmplNext(v:T?):T?
     abstract fun tmplRemove(v:T)
     abstract fun tmplJson(item:T):eJsonObject
-    abstract fun tmplRender(target:T, templates:List<eTemplate<T>>, data:Array<eViewModel>?, ref:eJsonObject?)
-    abstract fun tmplFirseChild(target:T):T
+    abstract fun tmplRender(target:T, templates:List<eTemplate<T>>, data:Array<out eViewModel>?, ref:eJsonObject?)
+    abstract fun tmplFirstChild(target:T):T?
 }

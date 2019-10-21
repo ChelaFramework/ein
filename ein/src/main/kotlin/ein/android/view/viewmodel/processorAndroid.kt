@@ -10,7 +10,11 @@ import ein.core.view.viewmodel.eViewModel
 import ein.core.view.viewmodel.template.eTemplate
 
 object processorAndroid:eProcessor<View>() {
-    override fun tmplFirseChild(target:View):View {
+    override fun tmplRender(target:View, templates:List<eTemplate<View>>, data:Array<out eViewModel>?, ref:eJsonObject?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun tmplFirstChild(target:View):View {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -29,11 +33,6 @@ object processorAndroid:eProcessor<View>() {
     override fun tmplJson(item:View):eJsonObject {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    override fun tmplRender(target:View, templates:List<eTemplate<View>>, data:Array<eViewModel>?, ref:eJsonObject?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun getStack(view:View) = mutableListOf<View>().apply{
         val stack = mutableListOf(view)
         var limit = 200

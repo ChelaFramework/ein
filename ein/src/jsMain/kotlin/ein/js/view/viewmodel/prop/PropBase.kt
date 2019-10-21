@@ -4,6 +4,8 @@ import ein.core.core.eNN
 import ein.core.core.eRunnable
 import ein.core.looper.ani
 import ein.core.value.eRemove
+import ein.core.view.viewmodel.template.eTemplate
+import ein.core.view.viewmodel.template.eTemplateData
 import ein.js.view.viewmodel.propertyDom
 import org.w3c.dom.*
 import kotlin.browser.window
@@ -103,5 +105,9 @@ fun PropBase() = propertyDom.let{
     }
     it["rectHeight"] = fun(view:HTMLElement, v:Any){
         if(v == true) view.style.height = "${window.innerHeight - view.getBoundingClientRect().top}px"
+    }
+    it["template"] = fun(view:HTMLElement, v:Any){
+        if(v !is eTemplateData) return
+        eTemplate.render(view, v.data, v.templates, v.ref)
     }
 }

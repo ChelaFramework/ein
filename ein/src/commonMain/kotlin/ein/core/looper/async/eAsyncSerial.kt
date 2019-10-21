@@ -33,4 +33,20 @@ class eAsyncSerial(private val async:eAsync):eSerial<eAwait>(){
             this.block()
         })
     }
+    fun loop(term:Double, block:(()->Unit)->Unit){
+        var run = false
+        var isStop = false
+        val f:()->Unit = {isStop = true}
+        var prev = 0.0
+        last(async.task {
+            if(!run){
+                run = true
+                block(f)
+                if(isStop) it.stop()
+                prev = now()
+            }else if(now() - prev > term){
+                run = false
+            }
+        })
+    }
 }

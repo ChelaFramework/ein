@@ -5,14 +5,14 @@ import ein.core.regex.eRegValue
 import ein.core.value.*
 
 /*
-"@{store.a}" //style:store.a
-"${}" //style:record self
+"s@store.a@" //style:store.a
+"r@@" //style:record self
 
-"${:record}" //record self
+"r@:record@" //record self
 
 //special key
-"a:${:index}" //index
-"b:${:size}" //record size
+"a:r@:index@" //index
+"b:r@:size@" //record size
 
 //no memo @
 "@a:3" //every update
@@ -23,6 +23,7 @@ class eItem internal constructor(internal val pos:List<Int>, data:String){
     private fun process(k:String, v:Any, r:MutableMap<String, Any>, memo:MutableMap<String, Any>, record:eViewModel?, i:Int, size:Int){
         val value = eValue[v, record, i, size].let{if(it !is String) it else eRegValue.num(it) ?: it}
         if(k[0] == '@') r[k.substring(1)] = value
+        else if(k == "template") r[k] = value
         else if(memo[k] != value){
             memo[k] = value
             r[k] = value
@@ -37,7 +38,7 @@ class eItem internal constructor(internal val pos:List<Int>, data:String){
                     else->null
                 }
                 (when(value){
-                    is eViewModel->value.map
+                    is eViewModel-> value.map
                     is eJsonObject->value
                     else->throw Throwable("invalid style:${v.stringify()}")
                 }).forEach {(k, v)->

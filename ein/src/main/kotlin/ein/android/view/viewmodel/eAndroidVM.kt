@@ -2,7 +2,6 @@ package ein.android.view.viewmodel
 
 import android.view.MotionEvent
 import android.view.View
-import android.webkit.WebView
 import android.widget.EditText
 import android.widget.TextView
 import ein.android.view.viewmodel.prop.OnTextChanged
@@ -59,28 +58,77 @@ abstract class eAndroidVM(isStored:Boolean = false):eViewModel(isStored){
     open var switchminwidth = 0
     //Text
     open var text = ""
+    protected fun text(V:String) = kv("text", V)
     open var fromHtml = ""
+    protected fun fromHtml(V:String) = kv("fromHtml", V)
     open var textSize = 0.0
+    protected fun textSize(V:Double) = kv("textSize", V)
     open var textScaleX = 0F
+    protected fun textScaleX(V:Float) = kv("textScaleX", V)
     open var lineSpacing = 0F
-    open var textColor = "#"
-    open var textAlignment = "" //center,gravity,inherit,textend,textstart,viewend,viewstart
+    protected fun lineSpacing(V:Float) = kv("lineSpacing", V)
+    open var textColor = ""
+    protected fun textColor(V:String) = kv("textColor", V)
+    open var textAlignment = ""
+    protected fun textAlignmentCenter() = kv("textAlignment", "center")
+    protected fun textAlignmentGravity() = kv("textAlignment", "gravity")
+    protected fun textAlignmentInherit() = kv("textAlignment", "inherit")
+    protected fun textAlignmentTextend() = kv("textAlignment", "textend")
+    protected fun textAlignmentTextstart() = kv("textAlignment", "textstart")
+    protected fun textAlignmentViewend() = kv("textAlignment", "viewend")
+    protected fun textAlignmentViewstart() = kv("textAlignment", "viewstart")
     open var hint = ""
-    open var hintColor = "#"
+    protected fun hint(V:String) = kv("hint", V)
+    open var hintColor = ""
+    protected fun hintColor(V:String) = kv("hintColor", V)
     open var maxLines = 0
-    open var ellipsize = "" //start,middle,end,marquee
+    protected fun maxLines(V:Int) = kv("maxLines", V)
+    open var ellipsize = ""
+    protected fun ellipsizeStart() = kv("ellipsize", "start")
+    protected fun ellipsizeMiddle() = kv("ellipsize", "middle")
+    protected fun ellipsizeEnd() = kv("ellipsize", "end")
+    protected fun ellipsizeMarquee() = kv("ellipsize", "marquee")
     open var maxLength = 0
+    protected fun maxLength(V:Int) = kv("maxLength", V)
     open var allCaps = true
+    protected fun allCaps(V:Boolean) = kv("allCaps", V)
     open var fontFamily = ""
+    protected fun fontFamily(V:String) = kv("fontFamily", V)
     open var font = ""
-    open var inputType = "" /*
-        date,datetime,none,number,numberdecimal,numberpassword,numbersigned,phone,
-        text,textautocomplete,textautocorrect,textcapcharacters,textcapsentences,
-        textcapwords,textemailaddress,textemailsubject,textfilter,textimemultiline,
-        textlongmessage,textmultiline,textnosuggestions,textpassword,textpersonname,
-        textphonetic,textpostaladdress,textshortmessage,texturi,textvisiblepassword,
-        textwebedittext,textwebemailaddress,textwebpassword,time
-    */
+    protected fun font(V:String) = kv("font", V)
+    open var inputType = ""
+    protected fun inputTypeDate() = kv("inputType", "date")
+    protected fun inputTypeDatetime() = kv("inputType", "datetime")
+    protected fun inputTypeNone() = kv("inputType", "none")
+    protected fun inputTypeNumber() = kv("inputType", "number")
+    protected fun inputTypeNumberdecimal() = kv("inputType", "numberdecimal")
+    protected fun inputTypeNumberpassword() = kv("inputType", "numberpassword")
+    protected fun inputTypeNumbersigned() = kv("inputType", "numbersigned")
+    protected fun inputTypePhone() = kv("inputType", "phone")
+    protected fun inputTypeText() = kv("inputType", "text")
+    protected fun inputTypeTextautocomplete() = kv("inputType", "textautocomplete")
+    protected fun inputTypeTextautocorrect() = kv("inputType", "textautocorrect")
+    protected fun inputTypeTextcapcharacters() = kv("inputType", "textcapcharacters")
+    protected fun inputTypeTextcapsentences() = kv("inputType", "textcapsentences")
+    protected fun inputTypeTextcapwords() = kv("inputType", "textcapwords")
+    protected fun inputTypeTextemailaddress() = kv("inputType", "textemailaddress")
+    protected fun inputTypeTextemailsubject() = kv("inputType", "textemailsubject")
+    protected fun inputTypeTextfilter() = kv("inputType", "textfilter")
+    protected fun inputTypeTextimemultiline() = kv("inputType", "textimemultiline")
+    protected fun inputTypeTextlongmessage() = kv("inputType", "textlongmessage")
+    protected fun inputTypeTextmultiline() = kv("inputType", "textmultiline")
+    protected fun inputTypeTextnosuggestions() = kv("inputType", "textnosuggestions")
+    protected fun inputTypeTextpassword() = kv("inputType", "textpassword")
+    protected fun inputTypeTextpersonname() = kv("inputType", "textpersonname")
+    protected fun inputTypeTextphonetic() = kv("inputType", "textphonetic")
+    protected fun inputTypeTextpostaladdress() = kv("inputType", "textpostaladdress")
+    protected fun inputTypeTextshortmessage() = kv("inputType", "textshortmessage")
+    protected fun inputTypeTexturi() = kv("inputType", "texturi")
+    protected fun inputTypeTextvisiblepassword() = kv("inputType", "textvisiblepassword")
+    protected fun inputTypeTextwebedittext() = kv("inputType", "textwebedittext")
+    protected fun inputTypeTextwebemailaddress() = kv("inputType", "textwebemailaddress")
+    protected fun inputTypeTextwebpassword() = kv("inputType", "textwebpassword")
+    protected fun inputTypeTime() = kv("inputType", "time")
     //View
     open var tag = ""
     open var isEnabled = true
@@ -88,8 +136,11 @@ abstract class eAndroidVM(isStored:Boolean = false):eViewModel(isStored){
     open var background:Any = "" //String, Int, Drawable, Bitmap
     open var shadow = 0F
     open var x = 0F
+    protected fun x(V:Float) = kv("x", V)
     open var y = 0F
+    protected fun y(V:Float) = kv("y", V)
     open var z = 0F
+    protected fun z(V:Float) = kv("z", V)
     open var scaleX = 0F
     open var scaleY = 0F
     open var rotation = 0F

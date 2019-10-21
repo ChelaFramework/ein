@@ -9,8 +9,14 @@ import ein.android.app.eDrawable
 import ein.android.view.viewmodel.propertyAndroid
 import ein.core.log.log
 import ein.core.regex.eReg
+import ein.core.view.viewmodel.template.eTemplate
+import ein.core.view.viewmodel.template.eTemplateData
 
 fun PropView() = propertyAndroid.let{
+    it["template"] = fun(view:View, v:Any){
+        if(v !is eTemplateData) return
+        eTemplate.render(view, v.data, v.templates, v.ref)
+    }
     it["tag"] = fun(view:View, v:Any){
         if(v !is String) return
         view.tag = v

@@ -4,11 +4,9 @@ import ein.core.core.eRunnable
 import ein.core.view.viewmodel.eViewModel
 
 abstract class eDomVM(isStored:Boolean = false):eViewModel(isStored){
-    open var className = ""
-    open var className_ = ""
     open var html = ""
-    open var html_ = ""
-    open var _html = ""
+    protected fun html(V:String) = kv("html", V)
+    open var className_ = ""
     open var name = ""
     open var runSubmit = true
     open var runFocus = true
@@ -25,4 +23,5 @@ abstract class eDomVM(isStored:Boolean = false):eViewModel(isStored){
     open var Aattr = ""
 
     open var color = ""
+    protected fun color(V:String) = kv("color", V)
 }

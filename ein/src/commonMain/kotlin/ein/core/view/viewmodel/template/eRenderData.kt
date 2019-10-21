@@ -1,5 +1,6 @@
 package ein.core.view.viewmodel.template
 
+import ein.core.log.log
 import ein.core.value.eJsonObject
 import ein.core.view.viewmodel.eProcessor
 import ein.core.view.viewmodel.eViewModel
@@ -10,12 +11,12 @@ class eRenderData<T>(private val tmpl: List<eTemplate<T>>, private val processor
         tmpl.forEachIndexed {i, tmpl->if(t[i] !== tmpl) return false}
         return true
     }
-    fun render(target:T, data:Array<eViewModel>?, r:eJsonObject?){
+    fun render(target:T, data:Array<out eViewModel>?, r:eJsonObject?){
         if(data == null) return
         val oSize = old.size
         val dSize = data.size
         val j = if(oSize > dSize) dSize else oSize
-        var child:T? = processor.tmplFirseChild(target)
+        var child:T? = processor.tmplFirstChild(target)
         var i = 0
         while(i < j){
             child?.let {

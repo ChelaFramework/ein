@@ -4,7 +4,6 @@ import ein.core.core.elazy
 import ein.core.looper.ani
 import ein.core.view.router.eAni
 import ein.core.view.viewmodel.eScanner
-import ein.core.view.viewmodel.eViewModel
 import ein.js.view.router.eDomHolder
 import ein.js.view.viewmodel.eDomVM
 import ein.js.view.viewmodel.processorDom
@@ -20,12 +19,7 @@ class HomeH(routerKey:String, holderKey:String, data:Any?):eDomHolder(routerKey,
             } ?: throw Throwable("no #home")
         }
     }
-    private val vm = Main().apply{
-        x = ""
-        title = "Main Title"
-        contents.html = "contents Text"
-        contents.color = "#ff0000"
-    }
+    private val vm = Home()
     override val el by elazy(true) {
         base.cloneNode(true) as HTMLElement
     }
@@ -49,12 +43,4 @@ class HomeH(routerKey:String, holderKey:String, data:Any?):eDomHolder(routerKey,
     override fun pushed() {
 
     }
-}
-class Main:eDomVM(){
-    var x by s
-    var title by s
-    val contents by v(object:eDomVM(){
-        override var html by s
-        override var color by s
-    })
 }

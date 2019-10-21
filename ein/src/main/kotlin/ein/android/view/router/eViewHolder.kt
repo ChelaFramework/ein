@@ -2,15 +2,7 @@ package ein.android.view.router
 
 import android.view.LayoutInflater
 import android.view.View
-import ein.android.view.viewmodel.processorAndroid
-import ein.android.view.viewmodel.propertyAndroid
-import ein.core.looper.ItemBlock
-import ein.core.view.router.eAni
 import ein.core.view.router.eHolder
-import ein.core.view.viewmodel.eProcessor
-import ein.core.view.viewmodel.eProperty
-import ein.core.view.viewmodel.eScanned
-import ein.core.view.viewmodel.eScanner
 
 abstract class eViewHolder(
     routerKey:String, key:String, data:Any? = null,

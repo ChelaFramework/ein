@@ -30,7 +30,6 @@ object MainLooper:eLooper(){
                     }
                 }
             }
-
             override fun stop() = ex.shutdown()
         }, eLockAndroid())
     }
@@ -46,6 +45,14 @@ object MainLooper:eLooper(){
         root = act.window.decorView as ViewGroup
         root?.apply{
             if(findViewWithTag<Ani>("EIN_ANI") == null) eThread.main(Runnable {addView(Ani(act))})
+        }
+    }
+
+    override fun stop() {
+        root?.apply{
+            findViewWithTag<Ani>("EIN_ANI")?.let{
+                eThread.main(Runnable {removeView(it)})
+            }
         }
     }
     fun terminate(){

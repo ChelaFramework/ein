@@ -72,10 +72,11 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation("androidx.core:core-ktx:1.2.0-alpha04")
-                implementation("androidx.activity:activity:1.1.0-alpha03")
+                implementation("androidx.core:core-ktx:1.2.0-beta01")
+                implementation("androidx.activity:activity:1.1.0-beta01")
                 implementation("androidx.appcompat:appcompat:1.1.0")
                 implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
+                implementation("androidx.recyclerview:recyclerview:1.1.0-beta05")
                 implementation("com.squareup.okhttp3:okhttp:3.14.2")
             }
         }
@@ -85,8 +86,8 @@ kotlin {
                 implementation("junit:junit:4.12")
                 implementation("androidx.test:runner:1.3.0-alpha02")
                 implementation("androidx.test.espresso:espresso-core:3.3.0-alpha02")
-                implementation("androidx.core:core-ktx:1.2.0-alpha04")
-                implementation("androidx.activity:activity:1.1.0-alpha03")
+                implementation("androidx.core:core-ktx:1.2.0-beta01")
+                implementation("androidx.activity:activity:1.1.0-beta01")
                 implementation("androidx.appcompat:appcompat:1.1.0")
                 implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
                 implementation("com.squareup.okhttp3:okhttp:3.14.2")

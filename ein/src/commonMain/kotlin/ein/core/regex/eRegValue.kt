@@ -4,7 +4,7 @@ import ein.core.value.*
 
 val regString = """"((?:\\"|[^"])*)"|`([^`]*)`"""
 val regStore = "(?:s@([^@]+)@)"
-val regRecord = "(?:r@([^@]+)@)"
+val regRecord = "(?:r@([^@]*)@)"
 val regDouble = """(-?(?:0|[1-9]\d*)(?:\.\d+)(?:[eE][-+]?\d+)?(?:dp|%w|%h)?)"""
 val regLong = """(-?(?:0|[1-9]\d*)(?:dp|sp|%w|%h)?)"""
 val regBool = "(true|false)"
